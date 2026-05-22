@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AYF Letter Generator</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <title>AYF Letter Image Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
         body {
@@ -63,74 +63,92 @@
             background-color: #00143a;
         }
 
-        /* Letter Preview & PDF Container (A4 Aspect Ratio) */
+        /* Letter Wrapper - Crucial for absolute, clean captures without screen scaling bugs */
+        .preview-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+        }
+
+        /* Fixed Dimensions matching an A4 Aspect Ratio at 96 DPI */
         #letter-container {
-            width: 210mm;
-            height: 297mm;
+            width: 794px;
+            height: 1123px;
             background-image: url('letter.jpg');
-            background-size: cover;
+            background-size: 100% 100%;
             background-position: center;
             background-repeat: no-repeat;
             position: relative;
             box-shadow: 0 0 10px rgba(0,0,0,0.2);
             box-sizing: border-box;
             background-color: #fff;
+            flex-shrink: 0;
         }
 
-        /* Dynamic Content Positioning */
+        /* Precision Text Positioning to keep layout on a single target image page */
         .letter-content {
             position: absolute;
-            top: 210px; /* Adjusted to fit neatly under the header banner */
+            top: 195px; 
             left: 75px;
             right: 75px;
             font-family: 'Times New Roman', Times, serif;
             color: #000000;
-            line-height: 1.6;
+            line-height: 1.5;
             font-size: 17px;
         }
 
         .recipient-name {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: bold;
             text-transform: uppercase;
-            text-decoration: underline;
-            margin-bottom: 5px;
+            margin-bottom: 2px;
             word-wrap: break-word;
-            max-width: 500px;
+            max-width: 550px;
+            display: inline-block;
+        }
+
+        .name-underline {
+            border: none; 
+            border-top: 2px solid black; 
+            width: 320px; 
+            margin: 0 0 25px 0;
         }
 
         .salutation {
-            margin-top: 35px;
             margin-bottom: 20px;
+            font-size: 18px;
         }
 
         .letter-title {
             text-align: center;
-            font-size: 23px;
+            font-size: 22px;
             font-weight: bold;
             text-transform: uppercase;
             margin-bottom: 20px;
+            letter-spacing: 0.5px;
         }
 
         .body-text {
             text-align: justify;
-            margin-bottom: 15px;
-            font-size: 17px;
+            margin-bottom: 14px;
+            font-size: 17.5px;
         }
 
         .bank-details {
-            margin: 25px 0;
-            font-size: 17px;
+            margin: 18px 0;
         }
 
         .bank-table {
             width: auto;
             border-collapse: collapse;
             font-family: 'Times New Roman', Times, serif;
+            font-size: 17.5px;
         }
 
         .bank-table td {
-            padding: 4px 8px;
+            padding: 3px 0;
             vertical-align: top;
         }
 
@@ -146,7 +164,7 @@
 <body>
 
     <div class="control-panel">
-        <h2 style="margin-top:0; color:#002060; text-align:center;">AYF Letter Generator (2026)</h2>
+        <h2 style="margin-top:0; color:#002060; text-align:center;">AYF Letter Image Generator</h2>
         
         <div class="form-group">
             <label for="input-name">Recipient Name:</label>
@@ -161,85 +179,95 @@
             </select>
         </div>
 
-        <button onclick="downloadPDF()">Generate & Download PDF</button>
+        <button onclick="downloadImage()">Generate & Download Image</button>
     </div>
 
-    <div id="letter-container">
-        <div class="letter-content">
-            <div id="display-name" class="recipient-name">MRS. SOLOMON OLUWASEUN</div>
-            <hr style="border: none; border-top: 2px solid black; width: 280px; margin: 5px 0 0 0;">
-            
-            <div id="display-salutation" class="salutation">Dear Ma,</div>
-            
-            <div class="letter-title">REQUEST FOR ASSISTANCE</div>
-            
-            <div class="body-text">
-                Calvary greeting to you in the name of our Lord and Saviour, Jesus Christ. 
-                The youths of this diocese humbly request your support at our diocesan youth camp which comes up this year between <strong>Wednesday, 12th and Saturday, 15th August, 2026</strong>.
-            </div>
-            
-            <div class="body-text">
-                <strong>Camp Theme: BE A BEACON OF LIGHT (Matt. 5:14-16).</strong>
-            </div>
+    <div class="preview-wrapper">
+        <div id="letter-container">
+            <div class="letter-content">
+                
+                <div id="display-name" class="recipient-name">MRS. SOLOMON OLUWASEUN</div>
+                <hr class="name-underline">
+                
+                <div id="display-salutation" class="salutation">Dear Ma,</div>
+                
+                <div class="letter-title">REQUEST FOR ASSISTANCE</div>
+                
+                <div class="body-text">
+                    Calvary greeting to you in the name of our Lord and Saviour, Jesus Christ. 
+                    The youths of this diocese humbly request your support at our diocesan youth camp which comes up this year between <strong>Wednesday, 12th and Saturday, 15th August, 2026</strong>.
+                </div>
+                
+                <div class="body-text">
+                    <strong>Camp Theme: BE A BEACON OF LIGHT (Matt. 5:14-16).</strong>
+                </div>
 
-            <div class="body-text" style="margin-top: 20px;">
-                Your donations can be sent to the account below:
-            </div>
+                <div class="body-text" style="margin-top: 18px;">
+                    Your donations can be sent to the account below:
+                </div>
 
-            <div class="bank-details">
-                <table class="bank-table">
-                    <tr>
-                        <td class="label">Account Name:</td>
-                        <td class="value">Anglican Youth Fellowship</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Account Number:</td>
-                        <td class="value">2150226509</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Bank:</td>
-                        <td class="value">U. B. A.</td>
-                    </tr>
-                </table>
-            </div>
+                <div class="bank-details">
+                    <table class="bank-table">
+                        <tr>
+                            <td class="label">Account Name:</td>
+                            <td class="value">Anglican Youth Fellowship</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Account Number:</td>
+                            <td class="value">2150226509</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Bank:</td>
+                            <td class="value">U. B. A.</td>
+                        </tr>
+                    </table>
+                </div>
 
-            <div class="body-text" style="margin-top: 25px;">
-                We thank you in anticipation for your donations, the Lord shall continue to provide for your needs. (Amen)
-            </div>
-            
-            <div class="body-text" style="margin-top: 20px;">
-                Yours in Christ,
+                <div class="body-text" style="margin-top: 20px;">
+                    We thank you in anticipation for your donations, the Lord shall continue to provide for your needs. (Amen)
+                </div>
+                
+                <div class="body-text" style="margin-top: 20px;">
+                    Yours in Christ,
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Synchronize input fields with the preview letter canvas in real-time
+        // Real-time synchronization method
         function updateLetter() {
             const nameInput = document.getElementById('input-name').value;
             const salutationInput = document.getElementById('input-salutation').value;
             
-            // Default text fallbacks if user inputs are empty
             document.getElementById('display-name').innerText = nameInput.trim() !== "" ? nameInput : "MRS. SOLOMON OLUWASEUN";
             document.getElementById('display-salutation').innerText = salutationInput;
         }
 
-        // Handle converting the A4 container element to an absolute-pixel clean PDF format
-        function downloadPDF() {
-            const element = document.getElementById('letter-container');
+        // Processing canvas screenshot engine execution
+        function downloadImage() {
+            const container = document.getElementById('letter-container');
             const recipientName = document.getElementById('input-name').value || "Document";
             
-            // Setup custom rules for html2pdf conversion metrics
-            const opt = {
-                margin:       0,
-                filename:     `AYF_Assistance_Letter_${recipientName.replace(/\s+/g, '_')}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, logging: false },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
+            // Clean up filename syntax constraints
+            const safeFileName = `AYF_Letter_${recipientName.replace(/\s+/g, '_')}.png`;
 
-            // Process image execution and prompt trigger save
-            html2pdf().set(opt).from(element).save();
+            // Render high quality viewport snapshot image outputs
+            html2canvas(container, {
+                scale: 2,             // Up-scales quality for sharp text clarity 
+                useCORS: true,        // Prevents cross-origin canvas security exceptions
+                allowTaint: true,
+                logging: false
+            }).then(canvas => {
+                // Instantly generate file element hook to trigger native browser save pipelines
+                const link = document.createElement('a');
+                link.download = safeFileName;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(error => {
+                console.error("Oops! Something went wrong tracking image generation:", error);
+                alert("An error occurred while generating your letter image. Ensure 'letter.jpg' is located inside the exact folder directory.");
+            });
         }
     </script>
 </body>
